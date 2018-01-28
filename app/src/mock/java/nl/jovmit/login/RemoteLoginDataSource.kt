@@ -1,18 +1,25 @@
 package nl.jovmit.login
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import nl.jovmit.R
+import nl.jovmit.login.data.LoginData
 import nl.jovmit.login.data.LoginResponse
 
 internal class RemoteLoginDataSource : LoginDataSource {
 
-    override fun login(username: String, password: String): LoginResponse {
-        if (username.isBlank()) {
-            return LoginResponse.Error(R.string.errorEmptyUsername)
-        } else if (password.isBlank()) {
-            return LoginResponse.Error(R.string.errorEmptyPassword)
-        } else if (username != "user" && password != "pass") {
-            return LoginResponse.Error(R.string.errorInvalidLogin)
+    private val loginLiveData = MutableLiveData<LoginResponse>()
+
+    override fun login(loginData: LoginData): LiveData<LoginResponse> {
+        when {
+            loginData.username.isBlank() ->
+                loginLiveData.value = LoginResponse.Error(R.string.errorEmptyUsername)
+            loginData.password.isBlank() ->
+                loginLiveData.value = LoginResponse.Error(R.string.errorEmptyPassword)
+            loginData.username != "user" && loginData.password != "pass" ->
+                loginLiveData.value = LoginResponse.Error(R.string.errorInvalidLogin)
+            else -> loginLiveData.value = LoginResponse.Success("accessToken")
         }
-        return LoginResponse.Success("accessToken")
+        return loginLiveData
     }
 }
