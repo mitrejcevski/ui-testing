@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">LoginDemo</string>
+    <string name="hello">Hello World!</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="errorEmptyUsername">Username is empty</string>
+    <string name="errorEmptyPassword">Password is empty</string>
+    <string name="errorInvalidLogin">Invalid Login</string>
+
+</resources>
