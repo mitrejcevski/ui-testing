@@ -1,10 +1,8 @@
 package nl.jovmit.login
 
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.action.ViewActions.typeText
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import nl.jovmit.*
+import nl.jovmit.login.LoginTestRobot.Companion.loginScreen
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,65 +16,96 @@ class LoginActivityTest {
 
     @Test
     fun shouldApplyCorrectTitle() {
-        toolbarWithTitle(R.string.login) check isDisplayed
+        loginScreen {
+            hasLoginTitle()
+        }
     }
 
     @Test
     fun shouldContainUsernameInput() {
-        R.id.loginUsername check isDisplayed
+        loginScreen {
+            includesUsername()
+        }
     }
 
     @Test
     fun usernameInputShouldApplyCorrectHint() {
-        R.id.loginUsername hasHint R.string.username
+        loginScreen {
+            usernameEditor {
+                hasCorrectHint()
+            }
+        }
     }
 
     @Test
     fun shouldContainPasswordInput() {
-        R.id.loginPassword check isDisplayed
+        loginScreen {
+            includesPassword()
+        }
     }
 
     @Test
     fun passwordInputShouldApplyCorrectHint() {
-        R.id.loginPassword hasHint R.string.password
+        loginScreen {
+            passwordEditor {
+                hasCorrectHint()
+            }
+        }
     }
 
     @Test
     fun shouldContainLoginButton() {
-        R.id.loginButton check isDisplayed
+        loginScreen {
+            includesLoginButton()
+        }
     }
 
     @Test
     fun loginButtonShouldApplyCorrectText() {
-        R.id.loginButton hasText R.string.login
+        loginScreen {
+            loginButton {
+                hasCorrectTitle()
+            }
+        }
     }
 
     @Test
     fun loginWithoutUsernameShouldDisplayError() {
-        R.id.loginButton perform click()
-        text(R.string.errorEmptyUsername) check isDisplayed
+        loginScreen {
+            typeUsername("")
+            typePassword("")
+        } submit {
+            displaysEmptyUsernameError()
+        }
     }
 
     @Test
     fun loginWithEmptyPasswordShouldDisplayError() {
-        R.id.loginUsername perform typeText("username")
-        R.id.loginButton perform click()
-        text(R.string.errorEmptyPassword) check isDisplayed
+        loginScreen {
+            typeUsername("username")
+            typePassword("")
+        } submit {
+            displaysEmptyPasswordError()
+        }
     }
 
     @Test
     fun loginWithIncorrectCredentialsShouldDisplayError() {
-        R.id.loginUsername perform typeText("username")
-        R.id.loginPassword perform typeText("password")
-        R.id.loginButton perform click()
-        text(R.string.errorInvalidLogin) check isDisplayed
+        loginScreen {
+            typeUsername("username")
+            typePassword("password")
+        } submit {
+            displaysInvalidAuthError()
+        }
     }
 
     @Test
     fun successfulLoginShouldOpenMainScreen() {
-        R.id.loginUsername perform typeText("user")
-        R.id.loginPassword perform typeText("pass")
-        R.id.loginButton perform click()
-        R.id.mainGreetingMessage check isDisplayed
+        loginScreen {
+            typeUsername("user")
+            typePassword("pass")
+        } submit {
+            opensMainScreen()
+        }
     }
 }
